@@ -1,5 +1,3 @@
-use std::env;
-
 use serenity::{
     model::{channel::Message, gateway::Ready},
     prelude::*,
@@ -63,8 +61,8 @@ impl EventHandler for Handler {
     }
 }
 
-pub fn start() {
-    let mut client = Client::new(TOKEN, Handler).expect("Err creating client");
+pub fn start(token: &str) {
+    let mut client = Client::new(token, Handler).expect("Err creating client");
 
     println!("Starting client...");
     if let Err(why) = client.start() {
