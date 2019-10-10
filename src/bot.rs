@@ -7,9 +7,6 @@ use serenity::model::prelude::ChannelId;
 use crate::parser;
 use crate::sorter::SortedCodes;
 
-const RECEIVE_CHANNEL: u64 = 631565506998042626;
-const SEND_CHANNEL: u64 = 631904101348933653;
-
 struct Here;
 impl Mentionable for Here {
     fn mention(&self) -> String {
@@ -17,7 +14,10 @@ impl Mentionable for Here {
     }
 }
 
-struct Handler;
+struct Handler {
+    send_channel: u64,
+    receive_channel: u64
+}
 
 impl EventHandler for Handler {
     fn message(&self, context: Context, msg: Message) {
@@ -33,7 +33,7 @@ impl EventHandler for Handler {
         let ChannelId(channel_id) = msg.channel_id;
         println!("Message in channel {}...￿", channel_id);
 
-        if channel_id == RECEIVE_CHANNEL {
+        if channel_id == self.receive_channel {
             println!("Correct channel!");
             println!("Parsing codes");
 
@@ -48,7 +48,7 @@ impl EventHandler for Handler {
             print_sorted_codes(&sorted_codes);
 
             let message = build_codes_message(&sorted_codes).build();
-            if let Err(err) = ChannelId(SEND_CHANNEL).say(&context.http, &message) {
+            if let Err(err) = ChannelId(self.send_channel).say(&context.http, &message) {
                 println!("Error sending message: {:?}", err);
             }
         } else {
@@ -61,8 +61,8 @@ impl EventHandler for Handler {
     }
 }
 
-pub fn start(token: &str) {
-    let mut client = Client::new(token, Handler).expect("Err creating client");
+pub fn start(token: &str, receive_channel: u64, send_channel: u64) {
+    let mut client = Client::new(token, Handler { send_channel, receive_channel }).expect("Err creating client");
 
     println!("Starting client...");
     if let Err(why) = client.start() {
