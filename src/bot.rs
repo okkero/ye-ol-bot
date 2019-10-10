@@ -9,7 +9,6 @@ use serenity::model::prelude::ChannelId;
 use crate::parser;
 use crate::sorter::SortedCodes;
 
-const TOKEN: &str = "NjMxNTYwMzM5NTE0ODUxMzI5.XZ4tGg.GwEiUjbTGgPq9vKBgQ6lZ5bpSno";
 const RECEIVE_CHANNEL: u64 = 631565506998042626;
 const SEND_CHANNEL: u64 = 631904101348933653;
 
